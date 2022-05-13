@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/mvc
+   http://www.springframework.org/schema/mvc/spring-mvc.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <mvc:resources mapping="/**" location="/" />
+    <mvc:annotation-driven />
+    <context:component-scan base-package="com.example.controller,com.example.dao,com.example.dto,com.example.service" />
+    <mvc:default-servlet-handler />
+
+    <bean id="viewResolver1" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+        <property name="order" value="1"/>
+        <property name="basename" value="views"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/supermarket" />
+        <property name="user" value="root" />
+        <property name="password" value="password" />
+        <property name="initialPoolSize" value="2" />
+        <property name="minPoolSize" value="1" />
+        <property name="maxPoolSize" value="5" />
+    </bean>
+
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+<!--                <prop key="hibernate.hbm2ddl.auto">create</prop>-->
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+
+        <property name="annotatedClasses">
+            <list>
+                <value>com.example.dto.Customer</value>
+                <value>com.example.dto.Product</value>
+                <value>com.example.dto.Staff</value>
+                <value>com.example.dto.BillMaster</value>
+                <value>com.example.dto.BillDetails</value>
+            </list>
+        </property>
+
+    </bean>
+
+
+</beans>
